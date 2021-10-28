@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Place, PlaceStatus } from './place.model';
 import { v4 as uuid } from "uuid";
 import { CreatePlaceDto } from './dto/create-place.dto';
+import { UpdatePlaceDto } from './dto/update-place.dto';
 
 @Injectable()
 export class PlacesService {
@@ -44,6 +45,52 @@ export class PlacesService {
         this.places.push(newPlace);
 
         return newPlace;
+
+    }
+
+    updatePlaceStatus(id: string, status: PlaceStatus): Place {
+
+        // 1 - Encontrar o lugar. Preciso do ID
+        const place = this.getPlaceById(id);
+
+        // 2 - Atualizar o status
+        place.status = status;
+
+        return place;
+
+    }
+
+    updatePlace(id: string, updatePlaceDto: UpdatePlaceDto): Place {
+
+        const { name, site, address, image, ticket, description } = updatePlaceDto;
+        
+        const place = this.getPlaceById(id);
+
+        if (name) {
+            place.name = name;
+        }
+        
+        if (site) {
+            place.site = site;
+        }
+
+        if (address) {
+            place.address = address;
+        }
+        
+        if (image) {
+            place.image = image;            
+        }
+
+        if (ticket) {
+            place.ticket = ticket;
+        }
+
+        if (description) {
+            place.description = description;
+        }
+
+        return place;
 
     }
 

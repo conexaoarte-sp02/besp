@@ -1,5 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { CreatePlaceDto } from './dto/create-place.dto';
+import { UpdatePlaceStatusDto } from './dto/update-place-status.dto';
+import { UpdatePlaceDto } from './dto/update-place.dto';
 import { Place } from './place.model';
 import { PlacesService } from './places.service';
 
@@ -31,7 +33,29 @@ export class PlacesController {
 
     }
 
-    // PATCH
+    // PATCH http://localhost:3000/places/dc6d06c8-a0f7-4a88/status
+    @Patch(":id/status")
+    updatePlaceStatus(
+        @Param("id") id: string,
+        @Body() newStatus: UpdatePlaceStatusDto,
+    ): Place {
+
+        const { status } = newStatus;
+
+        return this.placesService.updatePlaceStatus(id, status);
+
+    }
+
+    // PATCH http://localhost:3000/places/dc6d06c8-a0f7-4a88
+    @Patch(":id")
+    updatePlace(
+        @Param("id") id: string,
+        @Body() newPlace: UpdatePlaceDto
+    ): Place {
+
+        return this.placesService.updatePlace(id, newPlace);
+
+    }
 
     // DELETE http://localhost:3000/places/dc6d06c8-a0f7-4a88 - Excluir o lugar que possua o ID informado
     @Delete(":id")
