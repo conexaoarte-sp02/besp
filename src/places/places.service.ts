@@ -1,12 +1,112 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Place, PlaceStatus } from './place.model';
+import { PlaceStatus } from './place-status.enum';
 import { v4 as uuid } from "uuid";
 import { CreatePlaceDto } from './dto/create-place.dto';
 import { UpdatePlaceDto } from './dto/update-place.dto';
+import { Place } from './place.entity';
+import { PlacesRepository } from './places.repository';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class PlacesService {
 
+    constructor(
+        @InjectRepository(PlacesRepository)
+        private placesRepository: PlacesRepository
+    ) {}
+
+    // Novo código
+    // async/await
+    async getAllPlaces(): Promise<Place[]> {
+
+        return this.placesRepository.getPlaces();
+
+    }
+
+    async getPlaceById(id: string): Promise<Place> {
+
+        const found = await this.placesRepository.findOne(id);
+
+        if (!found) {
+            throw new NotFoundException("ID não encontrado.");
+        }
+
+        return found;
+
+    }
+
+    async createPlace(createPlaceDto: CreatePlaceDto): Promise<Place> {
+
+        return await this.placesRepository.createPlace(createPlaceDto);
+
+    }
+
+    async updatePlaceStatus(id: string, status: PlaceStatus): Promise<Place> {
+
+        // 1 - Encontrar o lugar. Preciso do ID
+        const place = await this.getPlaceById(id);
+
+        // 2 - Atualizar o status
+        place.status = status;
+
+        await this.placesRepository.save(place);
+
+        return place;
+
+    }
+
+    async updatePlace(id: string, updatePlaceDto: UpdatePlaceDto): Promise<Place> {
+
+        const { name, site, address, image, ticket, description, categoryId } = updatePlaceDto;
+        
+        const place = await this.getPlaceById(id);
+
+        if (name) {
+            place.name = name;
+        }
+        
+        if (site) {
+            place.site = site;
+        }
+
+        if (address) {
+            place.address = address;
+        }
+        
+        if (image) {
+            place.image = image;            
+        }
+
+        if (ticket) {
+            place.ticket = ticket;
+        }
+
+        if (description) {
+            place.description = description;
+        }
+ 
+        if (categoryId) {
+            place.categoryId = categoryId;
+        }
+
+        await this.placesRepository.save(place);
+
+        return place;
+
+    }
+
+    async deletePlace(id: string): Promise<void> {
+
+        const result = await this.placesRepository.delete(id);
+
+        if (result.affected === 0) {
+            throw new NotFoundException("ID não encontrado.");
+        }
+
+    }
+
+    // Código antigo
+    /*
     private places: Place[] = [];
 
     getAllPlaces(): Place[] {
@@ -111,5 +211,7 @@ export class PlacesService {
         // Usado para verificar uma diferença
 
     }
+
+    */
 
 }

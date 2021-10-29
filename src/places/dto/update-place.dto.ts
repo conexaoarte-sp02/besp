@@ -24,4 +24,7 @@ export class UpdatePlaceDto {
     @IsOptional()
     @IsString()
     description: string;
+
+    @IsOptional()
+    categoryId: number;
 }
