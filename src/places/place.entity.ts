@@ -28,5 +28,5 @@ export class Place {
     status: PlaceStatus;
 
     @Column()
-    categoryId: number;
+    categoryId: string;
 }

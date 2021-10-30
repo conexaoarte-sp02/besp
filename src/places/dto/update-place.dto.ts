@@ -26,5 +26,5 @@ export class UpdatePlaceDto {
     description: string;
 
     @IsOptional()
-    categoryId: number;
+    categoryId: string;
 }
