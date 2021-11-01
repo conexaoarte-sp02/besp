@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreatePlaceDto } from './dto/create-place.dto';
 import { UpdatePlaceStatusDto } from './dto/update-place-status.dto';
 import { UpdatePlaceDto } from './dto/update-place.dto';
@@ -27,6 +28,7 @@ export class PlacesController {
     }
 
     // POST http://localhost:3000/places - Criar um novo lugar
+    @UseGuards(JwtAuthGuard)
     @Post()
     async createPlace(@Body() createPlaceDto: CreatePlaceDto): Promise<Place> {
 
@@ -35,6 +37,7 @@ export class PlacesController {
     }
 
     // PATCH http://localhost:3000/places/dc6d06c8-a0f7-4a88/status
+    @UseGuards(JwtAuthGuard)
     @Patch(":id/status")
     async updatePlaceStatus(
         @Param("id") id: string,
@@ -48,6 +51,7 @@ export class PlacesController {
     }
 
     // PATCH http://localhost:3000/places/dc6d06c8-a0f7-4a88
+    @UseGuards(JwtAuthGuard)
     @Patch(":id")
     async updatePlace(
         @Param("id") id: string,
@@ -59,6 +63,7 @@ export class PlacesController {
     }
 
     // DELETE http://localhost:3000/places/dc6d06c8-a0f7-4a88 - Excluir o lugar que possua o ID informado
+    @UseGuards(JwtAuthGuard)
     @Delete(":id")
     async deletePlace(@Param("id") id: string): Promise<void> {
 
