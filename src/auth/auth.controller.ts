@@ -11,14 +11,12 @@ export class AuthController {
     constructor(private authService: AuthService) {}
     
     // http://localhost:3000/auth/signup
-    /*
     @Post("signup")
     async signUp(@Body() authCredentialsDto: AuthCredentialsDto): Promise<User> {
 
         return await this.authService.signUp(authCredentialsDto);
 
     }
-    */
 
     @Post("signin")
     async signIn(@Body() authCredentialsDto: AuthCredentialsDto): Promise<{
